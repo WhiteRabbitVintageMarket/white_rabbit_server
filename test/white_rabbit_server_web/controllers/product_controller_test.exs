@@ -23,7 +23,15 @@ defmodule WhiteRabbitServerWeb.ProductControllerTest do
     price: "some updated price",
     is_sold: false
   }
-  @invalid_attrs %{name: nil, size: nil, description: nil, url: nil, sku: nil, price: nil, is_sold: nil}
+  @invalid_attrs %{
+    name: nil,
+    size: nil,
+    description: nil,
+    url: nil,
+    sku: nil,
+    price: nil,
+    is_sold: nil
+  }
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}

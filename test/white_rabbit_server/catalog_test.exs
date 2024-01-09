@@ -8,7 +8,15 @@ defmodule WhiteRabbitServer.CatalogTest do
 
     import WhiteRabbitServer.CatalogFixtures
 
-    @invalid_attrs %{name: nil, size: nil, description: nil, url: nil, sku: nil, price: nil, is_sold: nil}
+    @invalid_attrs %{
+      name: nil,
+      size: nil,
+      description: nil,
+      url: nil,
+      sku: nil,
+      price: nil,
+      is_sold: nil
+    }
 
     test "list_products/0 returns all products" do
       product = product_fixture()
@@ -21,7 +29,15 @@ defmodule WhiteRabbitServer.CatalogTest do
     end
 
     test "create_product/1 with valid data creates a product" do
-      valid_attrs = %{name: "some name", size: "some size", description: "some description", url: "some url", sku: "some sku", price: "some price", is_sold: true}
+      valid_attrs = %{
+        name: "some name",
+        size: "some size",
+        description: "some description",
+        url: "some url",
+        sku: "some sku",
+        price: "some price",
+        is_sold: true
+      }
 
       assert {:ok, %Product{} = product} = Catalog.create_product(valid_attrs)
       assert product.name == "some name"
@@ -39,7 +55,16 @@ defmodule WhiteRabbitServer.CatalogTest do
 
     test "update_product/2 with valid data updates the product" do
       product = product_fixture()
-      update_attrs = %{name: "some updated name", size: "some updated size", description: "some updated description", url: "some updated url", sku: "some updated sku", price: "some updated price", is_sold: false}
+
+      update_attrs = %{
+        name: "some updated name",
+        size: "some updated size",
+        description: "some updated description",
+        url: "some updated url",
+        sku: "some updated sku",
+        price: "some updated price",
+        is_sold: false
+      }
 
       assert {:ok, %Product{} = product} = Catalog.update_product(product, update_attrs)
       assert product.name == "some updated name"

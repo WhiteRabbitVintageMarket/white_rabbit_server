@@ -10,7 +10,8 @@ defmodule WhiteRabbitServer.Application do
     children = [
       WhiteRabbitServerWeb.Telemetry,
       WhiteRabbitServer.Repo,
-      {DNSCluster, query: Application.get_env(:white_rabbit_server, :dns_cluster_query) || :ignore},
+      {DNSCluster,
+       query: Application.get_env(:white_rabbit_server, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: WhiteRabbitServer.PubSub},
       # Start a worker by calling: WhiteRabbitServer.Worker.start_link(arg)
       # {WhiteRabbitServer.Worker, arg},

@@ -2,7 +2,9 @@ defmodule WhiteRabbitServerWeb.ErrorJSONTest do
   use WhiteRabbitServerWeb.ConnCase, async: true
 
   test "renders 404" do
-    assert WhiteRabbitServerWeb.ErrorJSON.render("404.json", %{}) == %{errors: %{detail: "Not Found"}}
+    assert WhiteRabbitServerWeb.ErrorJSON.render("404.json", %{}) == %{
+             errors: %{detail: "Not Found"}
+           }
   end
 
   test "renders 500" do

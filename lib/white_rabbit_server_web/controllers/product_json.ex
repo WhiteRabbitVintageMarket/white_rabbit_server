@@ -22,7 +22,7 @@ defmodule WhiteRabbitServerWeb.ProductJSON do
       name: product.name,
       description: product.description,
       size: product.size,
-      price: product.price,
+      amount: Money.to_string(product.amount, symbol: false),
       url: product.url,
       is_sold: product.is_sold
     }

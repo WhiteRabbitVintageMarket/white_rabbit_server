@@ -14,7 +14,7 @@ defmodule WhiteRabbitServer.CatalogFixtures do
         description: "some description",
         is_sold: true,
         name: "some name",
-        price: "some price",
+        amount: Money.new(100, :USD),
         size: "some size",
         sku: "some sku",
         url: "some url"

@@ -11,7 +11,7 @@ defmodule WhiteRabbitServerWeb.ProductControllerTest do
     description: "some description",
     url: "some url",
     sku: "some sku",
-    price: "some price",
+    amount: "some amount",
     is_sold: true
   }
   @update_attrs %{
@@ -20,7 +20,7 @@ defmodule WhiteRabbitServerWeb.ProductControllerTest do
     description: "some updated description",
     url: "some updated url",
     sku: "some updated sku",
-    price: "some updated price",
+    amount: "some updated amount",
     is_sold: false
   }
   @invalid_attrs %{
@@ -29,7 +29,7 @@ defmodule WhiteRabbitServerWeb.ProductControllerTest do
     description: nil,
     url: nil,
     sku: nil,
-    price: nil,
+    amount: nil,
     is_sold: nil
   }
 
@@ -56,7 +56,7 @@ defmodule WhiteRabbitServerWeb.ProductControllerTest do
                "description" => "some description",
                "is_sold" => true,
                "name" => "some name",
-               "price" => "some price",
+               "amount" => "some amount",
                "size" => "some size",
                "sku" => "some sku",
                "url" => "some url"
@@ -83,7 +83,7 @@ defmodule WhiteRabbitServerWeb.ProductControllerTest do
                "description" => "some updated description",
                "is_sold" => false,
                "name" => "some updated name",
-               "price" => "some updated price",
+               "amount" => "some updated amount",
                "size" => "some updated size",
                "sku" => "some updated sku",
                "url" => "some updated url"

@@ -7,7 +7,7 @@ defmodule WhiteRabbitServer.Repo.Migrations.CreateProducts do
       add :name, :string
       add :description, :string
       add :size, :string
-      add :price, :string
+      add :amount, :integer
       add :url, :string
       add :is_sold, :boolean, default: false, null: false
 

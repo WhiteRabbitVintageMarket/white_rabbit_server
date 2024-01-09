@@ -14,7 +14,7 @@ defmodule WhiteRabbitServer.CatalogTest do
       description: nil,
       url: nil,
       sku: nil,
-      price: nil,
+      amount: nil,
       is_sold: nil
     }
 
@@ -35,7 +35,7 @@ defmodule WhiteRabbitServer.CatalogTest do
         description: "some description",
         url: "some url",
         sku: "some sku",
-        price: "some price",
+        amount: Money.new(500, :USD),
         is_sold: true
       }
 
@@ -45,7 +45,7 @@ defmodule WhiteRabbitServer.CatalogTest do
       assert product.description == "some description"
       assert product.url == "some url"
       assert product.sku == "some sku"
-      assert product.price == "some price"
+      assert Money.to_string(product.amount) == "$5.00"
       assert product.is_sold == true
     end
 
@@ -62,17 +62,18 @@ defmodule WhiteRabbitServer.CatalogTest do
         description: "some updated description",
         url: "some updated url",
         sku: "some updated sku",
-        price: "some updated price",
+        amount: Money.new(500, :USD),
         is_sold: false
       }
 
       assert {:ok, %Product{} = product} = Catalog.update_product(product, update_attrs)
+
       assert product.name == "some updated name"
       assert product.size == "some updated size"
       assert product.description == "some updated description"
       assert product.url == "some updated url"
       assert product.sku == "some updated sku"
-      assert product.price == "some updated price"
+      assert product.amount == Money.new(500, :USD)
       assert product.is_sold == false
     end
 

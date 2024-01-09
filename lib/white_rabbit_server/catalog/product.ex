@@ -8,7 +8,7 @@ defmodule WhiteRabbitServer.Catalog.Product do
     field :description, :string
     field :url, :string
     field :sku, :string
-    field :price, :string
+    field :amount, Money.Ecto.Amount.Type
     field :is_sold, :boolean, default: false
 
     timestamps(type: :utc_datetime)
@@ -17,7 +17,7 @@ defmodule WhiteRabbitServer.Catalog.Product do
   @doc false
   def changeset(product, attrs) do
     product
-    |> cast(attrs, [:sku, :name, :description, :size, :price, :url, :is_sold])
-    |> validate_required([:sku, :name, :description, :size, :price, :url, :is_sold])
+    |> cast(attrs, [:sku, :name, :description, :size, :amount, :url, :is_sold])
+    |> validate_required([:sku, :name, :description, :size, :amount, :url, :is_sold])
   end
 end

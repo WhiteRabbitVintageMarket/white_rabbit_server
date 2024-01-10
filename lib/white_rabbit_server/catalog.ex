@@ -38,6 +38,22 @@ defmodule WhiteRabbitServer.Catalog do
   def get_product!(id), do: Repo.get!(Product, id)
 
   @doc """
+  Gets a single product by sku.
+
+  Returns nil if no result was found. Raises if more than one entry.
+
+  ## Examples
+
+      iex> get_product_by_sku(123)
+      %Product{}
+
+      iex> get_product_by_sku(456)
+      nil
+
+  """
+  def get_product_by_sku(sku), do: Repo.get_by(Product, sku: sku)
+
+  @doc """
   Creates a product.
 
   ## Examples

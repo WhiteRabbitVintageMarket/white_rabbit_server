@@ -14,5 +14,7 @@ defmodule WhiteRabbitServer.Repo.Migrations.CreateProducts do
 
       timestamps(type: :utc_datetime)
     end
+
+    create index(:products, [:sku], unique: true)
   end
 end

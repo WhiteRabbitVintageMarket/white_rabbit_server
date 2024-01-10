@@ -15,9 +15,10 @@ defmodule WhiteRabbitServer.CatalogFixtures do
         is_sold: true,
         name: "some name",
         amount: Money.new(100, :USD),
+        shipping_amount: Money.new(50, :USD),
         size: "some size",
         sku: "some sku",
-        url: "some url"
+        image_url: "some url"
       })
       |> WhiteRabbitServer.Catalog.create_product()
 

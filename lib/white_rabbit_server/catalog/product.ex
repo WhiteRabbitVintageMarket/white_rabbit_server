@@ -38,5 +38,6 @@ defmodule WhiteRabbitServer.Catalog.Product do
       :image_url,
       :is_sold
     ])
+    |> unique_constraint(:sku)
   end
 end

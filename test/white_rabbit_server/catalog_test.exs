@@ -12,9 +12,10 @@ defmodule WhiteRabbitServer.CatalogTest do
       name: nil,
       size: nil,
       description: nil,
-      url: nil,
+      image_url: nil,
       sku: nil,
       amount: nil,
+      shipping_amount: nil,
       is_sold: nil
     }
 
@@ -33,9 +34,10 @@ defmodule WhiteRabbitServer.CatalogTest do
         name: "some name",
         size: "some size",
         description: "some description",
-        url: "some url",
+        image_url: "some url",
         sku: "some sku",
         amount: Money.new(500, :USD),
+        shipping_amount: Money.new(100, :USD),
         is_sold: true
       }
 
@@ -43,9 +45,10 @@ defmodule WhiteRabbitServer.CatalogTest do
       assert product.name == "some name"
       assert product.size == "some size"
       assert product.description == "some description"
-      assert product.url == "some url"
+      assert product.image_url == "some url"
       assert product.sku == "some sku"
-      assert Money.to_string(product.amount) == "$5.00"
+      assert product.amount == Money.new(500, :USD)
+      assert product.shipping_amount == Money.new(100, :USD)
       assert product.is_sold == true
     end
 
@@ -60,9 +63,10 @@ defmodule WhiteRabbitServer.CatalogTest do
         name: "some updated name",
         size: "some updated size",
         description: "some updated description",
-        url: "some updated url",
+        image_url: "some updated url",
         sku: "some updated sku",
         amount: Money.new(500, :USD),
+        shipping_amount: Money.new(100, :USD),
         is_sold: false
       }
 
@@ -71,9 +75,10 @@ defmodule WhiteRabbitServer.CatalogTest do
       assert product.name == "some updated name"
       assert product.size == "some updated size"
       assert product.description == "some updated description"
-      assert product.url == "some updated url"
+      assert product.image_url == "some updated url"
       assert product.sku == "some updated sku"
       assert product.amount == Money.new(500, :USD)
+      assert product.shipping_amount == Money.new(100, :USD)
       assert product.is_sold == false
     end
 

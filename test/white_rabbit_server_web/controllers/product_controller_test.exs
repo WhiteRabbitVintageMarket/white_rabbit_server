@@ -28,7 +28,7 @@ defmodule WhiteRabbitServerWeb.ProductControllerTest do
                  "amount" => "1.00",
                  "size" => "some size",
                  "sku" => "some sku",
-                 "url" => "some url"
+                 "image_url" => "some url"
                }
              ] = json_response(conn, 200)["data"]
     end

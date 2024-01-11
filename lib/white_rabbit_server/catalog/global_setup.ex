@@ -2,10 +2,8 @@ defmodule WhiteRabbitServer.Catalog.GlobalSetup do
   alias WhiteRabbitServer.Catalog.Product
   alias WhiteRabbitServer.Catalog
 
-  @products_json_file "#{List.to_string(:code.priv_dir(:white_rabbit_server))}/repo/products.json"
-
   def seed() do
-    @products_json_file
+    "#{List.to_string(:code.priv_dir(:white_rabbit_server))}/repo/products.json"
     |> get_json
     |> Enum.each(fn attrs -> load_product(attrs) end)
   end

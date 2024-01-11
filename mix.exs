@@ -41,7 +41,8 @@ defmodule WhiteRabbitServer.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
-      {:money, "~> 1.12"}
+      {:money, "~> 1.12"},
+      {:corsica, "~> 2.0"}
     ]
   end
 

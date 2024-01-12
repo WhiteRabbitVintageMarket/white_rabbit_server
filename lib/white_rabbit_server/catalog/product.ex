@@ -10,7 +10,9 @@ defmodule WhiteRabbitServer.Catalog.Product do
     :amount,
     :shipping_amount,
     :image_url,
-    :is_sold
+    :is_sold,
+    :posted_at,
+    :sold_at
   ]
 
   @required_attrs [
@@ -29,6 +31,8 @@ defmodule WhiteRabbitServer.Catalog.Product do
     field :amount, Money.Ecto.Amount.Type
     field :shipping_amount, Money.Ecto.Amount.Type
     field :is_sold, :boolean, default: false
+    field :posted_at, :utc_datetime
+    field :sold_at, :utc_datetime
 
     timestamps(type: :utc_datetime)
   end

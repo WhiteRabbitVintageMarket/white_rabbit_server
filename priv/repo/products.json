@@ -7,7 +7,9 @@
     "amount": "42.00",
     "shipping_amount": "10.00",
     "image_url": "https://www.whiterabbitvintagemarket.com/images/products/brass-golden-retriever-music-box.jpeg",
-    "is_sold": false
+    "is_sold": false,
+    "posted_at": "2024-01-02T18:27:47.110Z",
+    "sold_at": ""
   },
   {
     "sku": "RMJ00002",
@@ -17,7 +19,9 @@
     "amount": "",
     "shipping_amount": "",
     "image_url": "https://www.whiterabbitvintagemarket.com/images/products/wood-gold-rose-cast-metal-frame.jpeg",
-    "is_sold": true
+    "is_sold": true,
+    "posted_at": "2024-01-03T18:27:47.110Z",
+    "sold_at": ""
   },
   {
     "sku": "RMJ00003",
@@ -27,7 +31,9 @@
     "amount": "",
     "shipping_amount": "",
     "image_url": "https://www.whiterabbitvintagemarket.com/images/products/green-wooden-box-brass-latch.jpeg",
-    "is_sold": true
+    "is_sold": true,
+    "posted_at": "2024-01-04T18:27:47.110Z",
+    "sold_at": ""
   },
   {
     "sku": "RMJ00004",
@@ -37,7 +43,9 @@
     "amount": "",
     "shipping_amount": "",
     "image_url": "https://www.whiterabbitvintagemarket.com/images/products/gold-rose-crystal-glass-trinket-box.jpeg",
-    "is_sold": true
+    "is_sold": true,
+    "posted_at": "2024-01-05T18:27:47.110Z",
+    "sold_at": ""
   },
   {
     "sku": "RMJ00005",
@@ -47,7 +55,9 @@
     "amount": "",
     "shipping_amount": "0",
     "image_url": "https://www.whiterabbitvintagemarket.com/images/products/solid-brass-clamshell-bookends.jpeg",
-    "is_sold": true
+    "is_sold": true,
+    "posted_at": "2024-01-06T18:27:47.110Z",
+    "sold_at": ""
   },
   {
     "sku": "RMJ00006",
@@ -57,7 +67,9 @@
     "amount": "48.00",
     "shipping_amount": "10.00",
     "image_url": "https://www.whiterabbitvintagemarket.com/images/products/vintage-decorative-standing-fan.jpeg",
-    "is_sold": true
+    "is_sold": true,
+    "posted_at": "2024-01-07T18:27:47.110Z",
+    "sold_at": ""
   },
   {
     "sku": "RMJ00007",
@@ -67,7 +79,9 @@
     "amount": "18.00",
     "shipping_amount": "10.00",
     "image_url": "https://www.whiterabbitvintagemarket.com/images/products/vintage-floral-copper-bowl.jpeg",
-    "is_sold": false
+    "is_sold": false,
+    "posted_at": "2024-01-08T18:27:47.110Z",
+    "sold_at": ""
   },
   {
     "sku": "RMJ00008",
@@ -77,7 +91,9 @@
     "amount": "22.00",
     "shipping_amount": "10.00",
     "image_url": "https://www.whiterabbitvintagemarket.com/images/products/vintage-mother-of-pearl-trinket-dish.jpeg",
-    "is_sold": false
+    "is_sold": false,
+    "posted_at": "2024-01-09T18:27:47.110Z",
+    "sold_at": ""
   },
   {
     "sku": "RMJ00009",
@@ -87,7 +103,9 @@
     "amount": "128.00",
     "shipping_amount": "10.00",
     "image_url": "https://www.whiterabbitvintagemarket.com/images/products/bird-gold-ormolu-fluted-crystal-perfume-bottle.jpeg",
-    "is_sold": false
+    "is_sold": false,
+    "posted_at": "2024-01-10T18:27:47.110Z",
+    "sold_at": ""
   },
   {
     "sku": "RMJ00010",
@@ -97,7 +115,9 @@
     "amount": "18.00",
     "shipping_amount": "10.00",
     "image_url": "https://www.whiterabbitvintagemarket.com/images/products/cbk-ltd-1988-teal-patina-candlesticks.jpeg",
-    "is_sold": false
+    "is_sold": false,
+    "posted_at": "2024-01-11T18:27:47.110Z",
+    "sold_at": ""
   },
   {
     "sku": "RMJ00011",
@@ -107,6 +127,8 @@
     "amount": "12.00",
     "shipping_amount": "10.00",
     "image_url": "https://www.whiterabbitvintagemarket.com/images/products/brass-scuttle-with-wooden-handle.jpeg",
-    "is_sold": false
+    "is_sold": false,
+    "posted_at": "2024-01-12T18:27:47.110Z",
+    "sold_at": ""
   }
 ]

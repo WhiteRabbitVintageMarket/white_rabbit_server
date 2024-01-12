@@ -17,15 +17,20 @@ defmodule WhiteRabbitServerWeb.ProductJSON do
 
   defp data(%Product{} = product) do
     %{
-      id: product.id,
       sku: product.sku,
       name: product.name,
-      description: product.description,
-      size: product.size,
-      amount: Money.to_string(product.amount, symbol: false),
-      shipping_amount: Money.to_string(product.shipping_amount, symbol: false),
+      description: format_optional_attr(product.description),
+      size: format_optional_attr(product.size),
+      amount: money_to_string(product.amount),
+      shipping_amount: money_to_string(product.shipping_amount),
       image_url: product.image_url,
       is_sold: product.is_sold
     }
   end
+
+  defp format_optional_attr(nil), do: ""
+  defp format_optional_attr(attr), do: attr
+
+  defp money_to_string(nil), do: ""
+  defp money_to_string(amount), do: Money.to_string(amount, symbol: false)
 end

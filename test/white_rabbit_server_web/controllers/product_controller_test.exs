@@ -16,18 +16,17 @@ defmodule WhiteRabbitServerWeb.ProductControllerTest do
     end
 
     test "returns a list of products", %{conn: conn} do
-      %Product{id: id} = product_fixture()
+      %Product{sku: sku} = product_fixture()
       conn = get(conn, ~p"/api/products")
 
       assert [
                %{
-                 "id" => ^id,
                  "description" => "some description",
                  "is_sold" => true,
                  "name" => "some name",
                  "amount" => "1.00",
                  "size" => "some size",
-                 "sku" => "some sku",
+                 "sku" => ^sku,
                  "image_url" => "some url"
                }
              ] = json_response(conn, 200)["data"]

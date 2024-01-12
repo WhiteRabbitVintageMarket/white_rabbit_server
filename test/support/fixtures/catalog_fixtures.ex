@@ -11,13 +11,13 @@ defmodule WhiteRabbitServer.CatalogFixtures do
     {:ok, product} =
       attrs
       |> Enum.into(%{
+        sku: Ecto.UUID.generate(),
         description: "some description",
         is_sold: true,
         name: "some name",
         amount: Money.new(100, :USD),
         shipping_amount: Money.new(50, :USD),
         size: "some size",
-        sku: "some sku",
         image_url: "some url"
       })
       |> WhiteRabbitServer.Catalog.create_product()

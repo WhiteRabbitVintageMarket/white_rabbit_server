@@ -18,7 +18,7 @@ defmodule WhiteRabbitServer.Catalog do
 
   """
   def list_products do
-    Repo.all(Product)
+    Product |> order_by(desc: :posted_at) |> Repo.all()
   end
 
   @doc """

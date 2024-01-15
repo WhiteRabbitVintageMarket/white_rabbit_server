@@ -11,7 +11,9 @@ defmodule WhiteRabbitServerWeb.Endpoint do
     same_site: "Lax"
   ]
 
-  plug Corsica, origins: ["http://localhost:8080", "https://www.whiterabbitvintagemarket.com"]
+  plug Corsica,
+    origins: ["http://localhost:8080", "https://www.whiterabbitvintagemarket.com"],
+    allow_headers: ["Content-Type"]
 
   # socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 

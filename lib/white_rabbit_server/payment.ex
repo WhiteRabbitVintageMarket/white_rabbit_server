@@ -11,12 +11,11 @@ defmodule WhiteRabbitServer.Payment do
 
   ## Examples
 
-      iex> create_order([%{ sku: "RMJ00001", quantity: 1 }, %{ sku: "RMJ00007", quantity: 1 }])
-      {:ok, %{body: %{id => "123456"}, status: 201}}
+      iex> create_order([%{"sku" => "RMJ00001", "quantity" => 1}, %{"sku" => "RMJ00007", "quantity" => 1}])
+      {:ok, %{body: %{id: "123456"}, status: 201}}
 
-      iex> create_order([%{ sku: "RMJ00001", quantity: 1 }, %{ sku: "RMJ00006", quantity: 1 }])
-      {:error, %{message: "", details: [], status: 400}}
-
+      iex> create_order([%{"sku" => "RMJ00001", "quantity" => 1}, %{"sku" => "RMJ00006", "quantity" => 1}])
+      {:error, %{message: "Product sku RMJ00006 is sold out", status: 400}}
   """
   def create_order(shopping_cart) do
     case ShoppingCart.get_products_from_shopping_cart(shopping_cart) do

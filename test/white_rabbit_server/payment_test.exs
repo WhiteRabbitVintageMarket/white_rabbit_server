@@ -31,42 +31,42 @@ defmodule WhiteRabbitServer.PaymentTest do
                 message: "Invalid shopping cart items",
                 status: 400,
                 detail: [{:sku, {"can't be blank", [validation: :required]}}]
-              }} = Payment.create_order([%{quantity: 1}])
+              }} = Payment.create_order([%{"quantity" => 1}])
 
       assert {:error,
               %{
                 message: "Invalid shopping cart items",
                 status: 400,
                 detail: [{:quantity, {"can't be blank", [validation: :required]}}]
-              }} = Payment.create_order([%{sku: "RMJ00001"}])
+              }} = Payment.create_order([%{"sku" => "RMJ00001"}])
 
       assert {:error,
               %{
                 message: "Invalid shopping cart items",
                 status: 400,
                 detail: [sku: {"is invalid", [{:type, :string}, {:validation, :cast}]}]
-              }} = Payment.create_order([%{sku: 1, quantity: 1}])
+              }} = Payment.create_order([%{"sku" => 1, "quantity" => 1}])
 
       assert {:error,
               %{
                 message: "Invalid shopping cart items",
                 status: 400,
                 detail: [quantity: {"is invalid", [{:type, :integer}, {:validation, :cast}]}]
-              }} = Payment.create_order([%{sku: "RMJ00001", quantity: "string"}])
+              }} = Payment.create_order([%{"sku" => "RMJ00001", "quantity" => "string"}])
     end
 
     test "create_order/1 with an unknown product sku returns an error" do
       product_fixture(%{sku: "RMJ00006", is_sold: false})
 
       assert {:error, %{message: "Failed to get product for sku UNKNOWN_SKU", status: 400}} =
-               Payment.create_order([%{sku: "UNKNOWN_SKU", quantity: 1}])
+               Payment.create_order([%{"sku" => "UNKNOWN_SKU", "quantity" => 1}])
     end
 
     test "create_order/1 with sold out product returns an error" do
       product_fixture(%{sku: "RMJ00006", is_sold: true})
 
-      assert {:error, %{message: "Product is sold out for sku RMJ00006", status: 400}} =
-               Payment.create_order([%{sku: "RMJ00006", quantity: 1}])
+      assert {:error, %{message: "Product sku RMJ00006 is sold out", status: 400}} =
+               Payment.create_order([%{"sku" => "RMJ00006", "quantity" => 1}])
     end
   end
 end

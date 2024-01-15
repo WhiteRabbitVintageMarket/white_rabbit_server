@@ -8,7 +8,7 @@ defmodule WhiteRabbitServer.Payment.ShoppingCart do
   def get_products_from_shopping_cart(shopping_cart)
       when is_list(shopping_cart) and length(shopping_cart) > 0 do
     case get_shopping_cart_items(shopping_cart) do
-      {:ok, %ShoppingCartItem{} = shopping_cart_items} ->
+      {:ok, shopping_cart_items} ->
         {:ok, shopping_cart_items}
 
       {:error, [_head | _tail] = errors} ->
@@ -50,11 +50,11 @@ defmodule WhiteRabbitServer.Payment.ShoppingCart do
     end)
   end
 
-  defp load_product_information(%{sku: sku, quantity: quantity}) do
+  defp load_product_information(%{"sku" => sku, "quantity" => quantity}) do
     case Catalog.get_product_by_sku(sku) do
       %Product{name: name, description: description, amount: amount, is_sold: is_sold} ->
         if is_sold do
-          {:error, "Product is sold out for sku #{sku}"}
+          {:error, "Product sku #{sku} is sold out"}
         else
           attrs = %{
             sku: sku,

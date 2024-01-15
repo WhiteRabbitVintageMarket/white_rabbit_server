@@ -16,7 +16,8 @@ defmodule WhiteRabbitServer.Application do
       # Start a worker by calling: WhiteRabbitServer.Worker.start_link(arg)
       # {WhiteRabbitServer.Worker, arg},
       # Start to serve requests, typically the last entry
-      WhiteRabbitServerWeb.Endpoint
+      WhiteRabbitServerWeb.Endpoint,
+      {Cachex, name: :payment}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

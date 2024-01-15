@@ -54,6 +54,19 @@ defmodule WhiteRabbitServer.Catalog do
   def get_product_by_sku(sku), do: Repo.get_by(Product, sku: sku)
 
   @doc """
+  Returns a list of products for specific skus.
+
+  ## Examples
+
+      iex> get_products_by_sku(["RMJ00001", "RMJ00002"])
+      [%Product{}, %Product{}]
+  """
+
+  def get_products_by_sku(skus) do
+    Repo.all(from p in Product, where: p.sku in ^skus)
+  end
+
+  @doc """
   Creates a product.
 
   ## Examples

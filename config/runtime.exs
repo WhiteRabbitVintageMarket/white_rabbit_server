@@ -20,6 +20,43 @@ if System.get_env("PHX_SERVER") do
   config :white_rabbit_server, WhiteRabbitServerWeb.Endpoint, server: true
 end
 
+paypal_environment_mode = System.get_env("PAYPAL_ENVIRONMENT_MODE") || "sandbox"
+config :white_rabbit_server, paypal_environment_mode: paypal_environment_mode
+
+if paypal_environment_mode == "sandbox" do
+  paypal_sandbox_client_id =
+    System.get_env("PAYPAL_SANDBOX_CLIENT_ID") ||
+      raise """
+      environment variable PAYPAL_SANDBOX_CLIENT_ID is missing.
+      """
+
+  paypal_sandbox_client_secret =
+    System.get_env("PAYPAL_SANDBOX_CLIENT_SECRET") ||
+      raise """
+      environment variable PAYPAL_SANDBOX_CLIENT_SECRET is missing.
+      """
+
+  config :white_rabbit_server,
+    paypal_sandbox_client_id: paypal_sandbox_client_id,
+    paypal_sandbox_client_secret: paypal_sandbox_client_secret
+else
+  paypal_production_client_id =
+    System.get_env("PAYPAL_PRODUCTION_CLIENT_ID") ||
+      raise """
+      environment variable PAYPAL_PRODUCTION_CLIENT_ID is missing.
+      """
+
+  paypal_production_client_secret =
+    System.get_env("PAYPAL_PRODUCTION_CLIENT_SECRET") ||
+      raise """
+      environment variable PAYPAL_PRODUCTION_CLIENT_SECRET is missing.
+      """
+
+  config :white_rabbit_server,
+    paypal_production_client_id: paypal_production_client_id,
+    paypal_production_client_secret: paypal_production_client_secret
+end
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||

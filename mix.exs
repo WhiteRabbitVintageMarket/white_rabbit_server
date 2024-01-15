@@ -42,7 +42,9 @@ defmodule WhiteRabbitServer.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
       {:money, "~> 1.12"},
-      {:corsica, "~> 2.0"}
+      {:corsica, "~> 2.0"},
+      {:req, "~> 0.4.0"},
+      {:cachex, "~> 3.6"}
     ]
   end
 

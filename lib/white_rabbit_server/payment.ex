@@ -15,7 +15,7 @@ defmodule WhiteRabbitServer.Payment do
       {:ok, %{body: %{id => "123456"}, status: 201}}
 
       iex> create_order([%{ sku: "RMJ00001", quantity: 1 }, %{ sku: "RMJ00006", quantity: 1 }])
-      {:error, %{body: %{}, status: 400}}
+      {:error, %{message: "", details: [], status: 400}}
 
   """
   def create_order(shopping_cart) do
@@ -25,7 +25,7 @@ defmodule WhiteRabbitServer.Payment do
         Order.create(order_body)
 
       {:error, error} ->
-        {:error, error}
+        {:error, Map.put_new(error, :status, 400)}
     end
   end
 

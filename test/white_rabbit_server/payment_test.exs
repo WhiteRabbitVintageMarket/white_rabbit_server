@@ -68,5 +68,12 @@ defmodule WhiteRabbitServer.PaymentTest do
       assert {:error, %{message: "Product sku RMJ00006 is sold out", status: 400}} =
                Payment.create_order([%{"sku" => "RMJ00006", "quantity" => 1}])
     end
+
+    test "create_order/1 with a valid product creates a paypal order" do
+      product_fixture(%{sku: "RMJ00001", is_sold: false})
+
+      assert {:ok, %{body: %{"id" => "1DE50048G78128604", "status" => "CREATED"}, status: 200}} =
+               Payment.create_order([%{"sku" => "RMJ00001", "quantity" => 1}])
+    end
   end
 end

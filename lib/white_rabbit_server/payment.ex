@@ -1,6 +1,7 @@
 defmodule WhiteRabbitServer.Payment do
+  alias WhiteRabbitServer.PayPal
   alias WhiteRabbitServer.Payment.ShoppingCart
-  alias WhiteRabbitServer.Payment.PayPal.Order
+  alias WhiteRabbitServer.Payment.ShoppingCartItem
 
   @moduledoc """
   The Payment context.
@@ -18,18 +19,36 @@ defmodule WhiteRabbitServer.Payment do
       {:error, %{message: "Product sku RMJ00006 is sold out", status: 400}}
   """
   def create_order(shopping_cart) do
-    case ShoppingCart.get_products_from_shopping_cart(shopping_cart) do
-      {:ok, products} ->
-        order_body = create_order_body_payload(products)
-        Order.create(order_body)
+    case ShoppingCart.create_shopping_cart_items(shopping_cart) do
+      {:ok, shopping_cart_items} ->
+        order_body = create_order_body_payload(shopping_cart_items)
+        PayPal.order_create(order_body)
 
       {:error, error} ->
         {:error, Map.put_new(error, :status, 400)}
     end
   end
 
-  defp create_order_body_payload(products_with_quantity) do
+  def capture_order(order_id) do
+    case PayPal.order_capture(order_id) do
+      {:ok, %{body: body, status: status}} ->
+        {:ok, %{body: body, status: status}}
+
+      {:error, error} ->
+        {:error, error}
+    end
+  end
+
+  defp create_order_body_payload(shopping_cart_items) do
     currency_code = "USD"
+
+    item_total =
+      shopping_cart_items
+      |> ShoppingCart.calculate_item_total()
+      |> Money.to_string(symbol: false)
+
+    # TODO: add support for shipping and tax
+    grand_total = item_total
 
     %{
       intent: "CAPTURE",
@@ -37,11 +56,11 @@ defmodule WhiteRabbitServer.Payment do
         %{
           amount: %{
             currency_code: currency_code,
-            value: calculate_grand_total(products_with_quantity),
+            value: grand_total,
             breakdown: %{
               item_total: %{
                 currency_code: currency_code,
-                value: calculate_item_total(products_with_quantity)
+                value: item_total
               },
               shipping: %{
                 currency_code: currency_code,
@@ -53,39 +72,32 @@ defmodule WhiteRabbitServer.Payment do
               }
             }
           },
-          items: format_purchase_items(products_with_quantity)
+          items: format_purchase_items(shopping_cart_items)
         }
       ]
     }
   end
 
-  defp format_purchase_items(products_with_quantity) do
-    Enum.map(products_with_quantity, fn product ->
+  defp format_purchase_items(shopping_cart_items) do
+    Enum.map(shopping_cart_items, fn %ShoppingCartItem{} = shopping_cart_item ->
+      %ShoppingCartItem{
+        name: name,
+        sku: sku,
+        description: description,
+        quantity: quantity,
+        amount: amount
+      } = shopping_cart_item
+
       %{
-        name: String.slice(product.name, 0, 127),
-        sku: product.sku,
-        description: String.slice(product.description, 0, 127),
-        quantity: product.quantity,
+        name: name,
+        sku: sku,
+        description: description,
+        quantity: quantity,
         unit_amount: %{
           currency_code: "USD",
-          value: Money.to_string(product.amount, symbol: false)
+          value: Money.to_string(amount, symbol: false)
         }
       }
     end)
-  end
-
-  defp calculate_grand_total(products_with_quantity) do
-    # TODO: add support for shipping cost and tax
-    calculate_item_total(products_with_quantity)
-  end
-
-  defp calculate_item_total(products_with_quantity) do
-    item_total =
-      Enum.reduce(products_with_quantity, 0, fn product, acc ->
-        total = Money.multiply(product.amount, product.quantity)
-        Money.add(total, acc)
-      end)
-
-    Money.to_string(item_total, symbol: false)
   end
 end

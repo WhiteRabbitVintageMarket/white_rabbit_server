@@ -1,0 +1,26 @@
+{
+  "id":"1DE50048G78128604",
+  "links":[
+    {
+      "href":"https://api.sandbox.paypal.com/v2/checkout/orders/1DE50048G78128604",
+      "method":"GET",
+      "rel":"self"
+    },
+    {
+      "href":"https://www.sandbox.paypal.com/checkoutnow?token=1DE50048G78128604",
+      "method":"GET",
+      "rel":"approve"
+    },
+    {
+      "href":"https://api.sandbox.paypal.com/v2/checkout/orders/1DE50048G78128604",
+      "method":"PATCH",
+      "rel":"update"
+    },
+    {
+      "href":"https://api.sandbox.paypal.com/v2/checkout/orders/1DE50048G78128604/capture",
+      "method":"POST",
+      "rel":"capture"
+    }
+  ],
+  "status":"CREATED"
+}

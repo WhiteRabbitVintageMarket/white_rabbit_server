@@ -9,5 +9,6 @@ defmodule WhiteRabbitServerWeb.Router do
     pipe_through :api
     get "/products", ProductController, :index
     post "/create-order", OrderController, :create
+    post "/capture-order", OrderController, :update
   end
 end

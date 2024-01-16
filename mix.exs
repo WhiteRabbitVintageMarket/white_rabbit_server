@@ -44,7 +44,8 @@ defmodule WhiteRabbitServer.MixProject do
       {:money, "~> 1.12"},
       {:corsica, "~> 2.0"},
       {:req, "~> 0.4.0"},
-      {:cachex, "~> 3.6"}
+      {:cachex, "~> 3.6"},
+      {:mox, "~> 1.0", only: :test}
     ]
   end
 

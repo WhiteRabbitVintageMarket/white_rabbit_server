@@ -5,7 +5,7 @@ defmodule WhiteRabbitServer.Payment.ShoppingCart do
   alias WhiteRabbitServer.Catalog.Product
   alias WhiteRabbitServer.Payment.ShoppingCartItem
 
-  def get_products_from_shopping_cart(shopping_cart)
+  def create_shopping_cart_items(shopping_cart)
       when is_list(shopping_cart) and length(shopping_cart) > 0 do
     case get_shopping_cart_items(shopping_cart) do
       {:ok, shopping_cart_items} ->
@@ -19,8 +19,17 @@ defmodule WhiteRabbitServer.Payment.ShoppingCart do
     end
   end
 
-  def get_products_from_shopping_cart(_shopping_cart) do
+  def create_shopping_cart_items(_shopping_cart) do
     {:error, %{message: "Expected shopping cart to be a list with at least 1 item"}}
+  end
+
+  def calculate_item_total(shopping_cart_items)
+      when is_list(shopping_cart_items) and length(shopping_cart_items) > 0 do
+    Enum.reduce(shopping_cart_items, 0, fn %ShoppingCartItem{} = shopping_cart_item, acc ->
+      %ShoppingCartItem{amount: amount, quantity: quantity} = shopping_cart_item
+      total = Money.multiply(amount, quantity)
+      Money.add(total, acc)
+    end)
   end
 
   defp create_shopping_cart_item(attrs) do
@@ -59,8 +68,8 @@ defmodule WhiteRabbitServer.Payment.ShoppingCart do
           attrs = %{
             sku: sku,
             quantity: quantity,
-            name: name,
-            description: description,
+            name: String.slice(name, 0, 127),
+            description: String.slice(description, 0, 127),
             amount: amount
           }
 

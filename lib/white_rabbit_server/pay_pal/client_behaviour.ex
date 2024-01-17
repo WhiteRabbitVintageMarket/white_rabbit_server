@@ -1,5 +1,5 @@
 defmodule WhiteRabbitServer.PayPal.ClientBehavior do
-  @callback order_create(map(), list()) :: {:ok, map()} | {:error, map()}
-  @callback order_get(binary(), list()) :: {:ok, map()} | {:error, map()}
-  @callback order_capture(binary(), list()) :: {:ok, map()} | {:error, map()}
+  @callback create_order(map(), list()) :: {:ok, map()} | {:error, map()}
+  @callback get_order(binary(), list()) :: {:ok, map()} | {:error, map()}
+  @callback capture_order(binary(), list()) :: {:ok, map()} | {:error, map()}
 end

@@ -1,12 +1,12 @@
 defmodule WhiteRabbitServer.PayPal do
-  def order_create(body, headers \\ []),
-    do: paypal_client_implementation().order_create(body, headers)
+  def create_order(body, headers \\ []),
+    do: paypal_client_implementation().create_order(body, headers)
 
-  def order_get(order_id, headers \\ []),
-    do: paypal_client_implementation().order_get(order_id, headers)
+  def get_order(order_id, headers \\ []),
+    do: paypal_client_implementation().get_order(order_id, headers)
 
-  def order_capture(order_id, headers \\ []),
-    do: paypal_client_implementation().order_capture(order_id, headers)
+  def capture_order(order_id, headers \\ []),
+    do: paypal_client_implementation().capture_order(order_id, headers)
 
   defp paypal_client_implementation() do
     Application.get_env(:white_rabbit_server, :paypal_client) ||

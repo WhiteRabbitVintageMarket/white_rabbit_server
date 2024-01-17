@@ -1,11 +1,15 @@
 defmodule WhiteRabbitServer.PaymentTest do
   use WhiteRabbitServer.DataCase
 
+  import Mox
+
+  # Make sure mocks are verified when the test exits
+  setup :verify_on_exit!
+
   alias WhiteRabbitServer.Payment
+  alias WhiteRabbitServer.MockPayPalClient
 
   describe "orders" do
-    # alias WhiteRabbitServer.Catalog.Product
-
     import WhiteRabbitServer.CatalogFixtures
 
     test "create_order/1 with invalid list returns an error" do
@@ -44,15 +48,22 @@ defmodule WhiteRabbitServer.PaymentTest do
               %{
                 message: "Invalid shopping cart items",
                 status: 400,
-                detail: [sku: {"is invalid", [{:type, :string}, {:validation, :cast}]}]
+                detail: [sku: {"is invalid", [type: :string, validation: :cast]}]
               }} = Payment.create_order([%{"sku" => 1, "quantity" => 1}])
 
       assert {:error,
               %{
                 message: "Invalid shopping cart items",
                 status: 400,
-                detail: [quantity: {"is invalid", [{:type, :integer}, {:validation, :cast}]}]
+                detail: [quantity: {"is invalid", [type: :integer, validation: :cast]}]
               }} = Payment.create_order([%{"sku" => "RMJ00001", "quantity" => "string"}])
+
+      assert {:error,
+              %{
+                message: "Invalid shopping cart items",
+                status: 400,
+                detail: [quantity: {"is invalid", [validation: :inclusion, enum: 1..10]}]
+              }} = Payment.create_order([%{"sku" => "RMJ00001", "quantity" => 0}])
     end
 
     test "create_order/1 with an unknown product sku returns an error" do
@@ -71,6 +82,16 @@ defmodule WhiteRabbitServer.PaymentTest do
 
     test "create_order/1 with a valid product creates a paypal order" do
       product_fixture(%{sku: "RMJ00001", is_sold: false})
+
+      expect(MockPayPalClient, :create_order, fn body, _headers ->
+        assert %{
+                 intent: "CAPTURE",
+                 purchase_units: [%{items: [%{sku: "RMJ00001"}], amount: _amount}]
+               } =
+                 body
+
+        {:ok, %{body: %{"id" => "1DE50048G78128604", "status" => "CREATED"}, status: 200}}
+      end)
 
       assert {:ok, %{body: %{"id" => "1DE50048G78128604", "status" => "CREATED"}, status: 200}} =
                Payment.create_order([%{"sku" => "RMJ00001", "quantity" => 1}])

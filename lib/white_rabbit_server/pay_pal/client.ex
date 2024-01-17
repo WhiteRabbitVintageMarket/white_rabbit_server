@@ -6,7 +6,7 @@ defmodule WhiteRabbitServer.PayPal.Client do
   alias WhiteRabbitServer.PayPal.Config
 
   @impl WhiteRabbitServer.PayPal.ClientBehavior
-  def order_create(body, headers) do
+  def create_order(body, headers) do
     default_headers = [
       {"Prefer", "return=minimal"},
       {"Content-Type", "application/json"}
@@ -34,7 +34,7 @@ defmodule WhiteRabbitServer.PayPal.Client do
   end
 
   @impl WhiteRabbitServer.PayPal.ClientBehavior
-  def order_get(order_id, headers) do
+  def get_order(order_id, headers) do
     default_headers = [
       {"Prefer", "return=representation"},
       {"Content-Type", "application/json"}
@@ -61,7 +61,7 @@ defmodule WhiteRabbitServer.PayPal.Client do
   end
 
   @impl WhiteRabbitServer.PayPal.ClientBehavior
-  def order_capture(order_id, headers) do
+  def capture_order(order_id, headers) do
     default_headers = [
       {"Prefer", "return=representation"},
       {"Content-Type", "application/json"}

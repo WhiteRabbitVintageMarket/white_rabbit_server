@@ -2,22 +2,22 @@ defmodule WhiteRabbitServer.PayPal.InMemory do
   @behaviour WhiteRabbitServer.PayPal.ClientBehavior
 
   @impl WhiteRabbitServer.PayPal.ClientBehavior
-  def order_create(_body, _headers) do
-    "test/support/fixtures/pay_pal/order_create.json"
+  def create_order(_body, _headers) do
+    "test/support/fixtures/pay_pal/create_order.json"
     |> File.read!()
     |> parse_response_from_json()
   end
 
   @impl WhiteRabbitServer.PayPal.ClientBehavior
-  def order_get(_order_id, _headers) do
-    "test/fixtures/pay_pal/order_get.json"
+  def get_order(_order_id, _headers) do
+    "test/fixtures/pay_pal/get_order.json"
     |> File.read!()
     |> parse_response_from_json()
   end
 
   @impl WhiteRabbitServer.PayPal.ClientBehavior
-  def order_capture(_order_id, _headers) do
-    "test/fixtures/pay_pal/order_capture.json"
+  def capture_order(_order_id, _headers) do
+    "test/fixtures/pay_pal/capture_order.json"
     |> File.read!()
     |> parse_response_from_json()
   end

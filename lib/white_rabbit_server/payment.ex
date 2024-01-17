@@ -22,7 +22,7 @@ defmodule WhiteRabbitServer.Payment do
     case ShoppingCart.create_shopping_cart_items(shopping_cart) do
       {:ok, shopping_cart_items} ->
         order_body = create_order_body_payload(shopping_cart_items)
-        PayPal.order_create(order_body)
+        PayPal.create_order(order_body)
 
       {:error, error} ->
         {:error, Map.put_new(error, :status, 400)}
@@ -30,7 +30,7 @@ defmodule WhiteRabbitServer.Payment do
   end
 
   def capture_order(order_id) do
-    case PayPal.order_capture(order_id) do
+    case PayPal.capture_order(order_id) do
       {:ok, %{body: body, status: status}} ->
         {:ok, %{body: body, status: status}}
 

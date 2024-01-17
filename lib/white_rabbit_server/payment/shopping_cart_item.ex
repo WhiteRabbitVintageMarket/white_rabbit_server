@@ -32,5 +32,6 @@ defmodule WhiteRabbitServer.Payment.ShoppingCartItem do
     |> validate_required(@required_attrs)
     |> validate_length(:name, max: 127)
     |> validate_length(:description, max: 127)
+    |> validate_inclusion(:quantity, 1..10)
   end
 end

@@ -30,9 +30,16 @@ defmodule WhiteRabbitServer.Payment do
   end
 
   def capture_order(order_id) do
-    case PayPal.capture_order(order_id) do
-      {:ok, %{body: body, status: status}} ->
-        {:ok, %{body: body, status: status}}
+    case validate_order(order_id) do
+      {:ok, shopping_cart_items} ->
+        case PayPal.capture_order(order_id) do
+          {:ok, response} ->
+            ShoppingCart.update_shopping_cart_items_as_sold(shopping_cart_items)
+            {:ok, response}
+
+          {:error, error} ->
+            {:error, error}
+        end
 
       {:error, error} ->
         {:error, error}
@@ -72,13 +79,13 @@ defmodule WhiteRabbitServer.Payment do
               }
             }
           },
-          items: format_purchase_items(shopping_cart_items)
+          items: format_purchase_unit_items(shopping_cart_items)
         }
       ]
     }
   end
 
-  defp format_purchase_items(shopping_cart_items) do
+  defp format_purchase_unit_items(shopping_cart_items) do
     Enum.map(shopping_cart_items, fn %ShoppingCartItem{} = shopping_cart_item ->
       %ShoppingCartItem{
         name: name,
@@ -99,5 +106,27 @@ defmodule WhiteRabbitServer.Payment do
         }
       }
     end)
+  end
+
+  defp get_purchase_unit_items(%{"purchase_units" => [%{"items" => items}]}) do
+    Enum.map(items, fn %{"sku" => sku, "quantity" => quantity} ->
+      %{"sku" => sku, "quantity" => quantity}
+    end)
+  end
+
+  defp validate_order(order_id) do
+    case PayPal.get_order(order_id) do
+      {:ok, %{body: body}} ->
+        shopping_cart_items =
+          body
+          |> get_purchase_unit_items()
+          # verify that none of the products are sold out
+          |> ShoppingCart.create_shopping_cart_items()
+
+        shopping_cart_items
+
+      {:error, error} ->
+        {:error, error}
+    end
   end
 end

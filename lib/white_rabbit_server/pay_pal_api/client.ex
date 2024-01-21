@@ -1,11 +1,11 @@
-defmodule WhiteRabbitServer.PayPal.Client do
-  @behaviour WhiteRabbitServer.PayPal.ClientBehavior
+defmodule WhiteRabbitServer.PayPalAPI.Client do
+  @behaviour WhiteRabbitServer.PayPalAPI.ClientBehavior
 
   require Logger
 
-  alias WhiteRabbitServer.PayPal.Config
+  alias WhiteRabbitServer.PayPalAPI.Config
 
-  @impl WhiteRabbitServer.PayPal.ClientBehavior
+  @impl WhiteRabbitServer.PayPalAPI.ClientBehavior
   def create_order(body, headers) do
     default_headers = [
       {"Prefer", "return=minimal"},
@@ -33,7 +33,7 @@ defmodule WhiteRabbitServer.PayPal.Client do
     end
   end
 
-  @impl WhiteRabbitServer.PayPal.ClientBehavior
+  @impl WhiteRabbitServer.PayPalAPI.ClientBehavior
   def get_order(order_id, headers) do
     default_headers = [
       {"Prefer", "return=representation"},
@@ -60,7 +60,7 @@ defmodule WhiteRabbitServer.PayPal.Client do
     end
   end
 
-  @impl WhiteRabbitServer.PayPal.ClientBehavior
+  @impl WhiteRabbitServer.PayPalAPI.ClientBehavior
   def capture_order(order_id, headers) do
     default_headers = [
       {"Prefer", "return=representation"},

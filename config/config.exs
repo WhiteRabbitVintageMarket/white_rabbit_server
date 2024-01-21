@@ -33,7 +33,7 @@ config :phoenix, :json_library, Jason
 config :money,
   default_currency: :USD
 
-config :white_rabbit_server, paypal_client: WhiteRabbitServer.PayPal.Client
+config :white_rabbit_server, paypal_api_client: WhiteRabbitServer.PayPalAPI.Client
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

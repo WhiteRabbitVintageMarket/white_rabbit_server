@@ -1,5 +1,5 @@
 defmodule WhiteRabbitServer.Payment do
-  alias WhiteRabbitServer.PayPal
+  alias WhiteRabbitServer.PayPalAPI
   alias WhiteRabbitServer.Payment.ShoppingCart
   alias WhiteRabbitServer.Payment.ShoppingCartItem
   alias WhiteRabbitServer.Orders.ProcessOrder
@@ -23,7 +23,7 @@ defmodule WhiteRabbitServer.Payment do
     case ShoppingCart.create_shopping_cart_items(shopping_cart) do
       {:ok, shopping_cart_items} ->
         order_body = create_order_body_payload(shopping_cart_items)
-        PayPal.create_order(order_body)
+        PayPalAPI.create_order(order_body)
 
       {:error, error} ->
         {:error, Map.put_new(error, :status, 400)}
@@ -44,7 +44,7 @@ defmodule WhiteRabbitServer.Payment do
   def capture_order(order_id) do
     case ProcessOrder.validate_paypal_order(order_id) do
       {:ok, _products} ->
-        case PayPal.capture_order(order_id) do
+        case PayPalAPI.capture_order(order_id) do
           {:ok, %{body: body} = response} ->
             ProcessOrder.complete_order(body)
             {:ok, response}

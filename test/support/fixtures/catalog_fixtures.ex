@@ -13,7 +13,7 @@ defmodule WhiteRabbitServer.CatalogFixtures do
       |> Enum.into(%{
         sku: Ecto.UUID.generate(),
         description: "some description",
-        is_sold: true,
+        quantity: 1,
         name: "some name",
         amount: Money.new(100, :USD),
         shipping_amount: Money.new(50, :USD),

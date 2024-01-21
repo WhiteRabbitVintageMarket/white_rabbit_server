@@ -22,7 +22,7 @@ defmodule WhiteRabbitServerWeb.ProductControllerTest do
       assert [
                %{
                  "description" => "some description",
-                 "is_sold" => true,
+                 "quantity" => 1,
                  "name" => "some name",
                  "amount" => "1.00",
                  "size" => "some size",

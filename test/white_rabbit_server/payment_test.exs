@@ -67,21 +67,21 @@ defmodule WhiteRabbitServer.PaymentTest do
     end
 
     test "create_order/1 with an unknown product sku returns an error" do
-      product_fixture(%{sku: "RMJ00006", is_sold: false})
+      product_fixture(%{sku: "RMJ00006", quantity: 1})
 
       assert {:error, %{message: "Failed to get product for sku UNKNOWN_SKU", status: 400}} =
                Payment.create_order([%{"sku" => "UNKNOWN_SKU", "quantity" => 1}])
     end
 
     test "create_order/1 with sold out product returns an error" do
-      product_fixture(%{sku: "RMJ00006", is_sold: true})
+      product_fixture(%{sku: "RMJ00006", quantity: 0})
 
       assert {:error, %{message: "Product sku RMJ00006 is sold out", status: 400}} =
                Payment.create_order([%{"sku" => "RMJ00006", "quantity" => 1}])
     end
 
     test "create_order/1 with a valid product creates a paypal order" do
-      product_fixture(%{sku: "RMJ00001", is_sold: false})
+      product_fixture(%{sku: "RMJ00001", quantity: 1})
 
       expect(MockPayPalClient, :create_order, fn body, _headers ->
         assert %{

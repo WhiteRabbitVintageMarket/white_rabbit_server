@@ -6,7 +6,7 @@ defmodule WhiteRabbitServerWeb.OrderController do
   action_fallback WhiteRabbitServerWeb.FallbackController
 
   def create(conn, %{"cart" => shopping_cart}) do
-    case Payment.create_order(shopping_cart) do
+    case Payment.create_order_for_payment(shopping_cart) do
       {:ok, %{body: body, status: status}} ->
         conn
         |> put_status(status)
@@ -20,7 +20,7 @@ defmodule WhiteRabbitServerWeb.OrderController do
   end
 
   def update(conn, %{"id" => id}) do
-    case Payment.capture_order(id) do
+    case Payment.complete_order_for_payment(id) do
       {:ok, %{body: body, status: status}} ->
         conn
         |> put_status(status)

@@ -59,15 +59,15 @@ defmodule WhiteRabbitServer.Payment.ShoppingCart do
     end)
   end
 
-  defp load_product_information(%{"sku" => sku, "quantity" => quantity}) do
+  defp load_product_information(%{"sku" => sku, "quantity" => shopping_cart_item_quantity}) do
     case Catalog.get_product_by_sku(sku) do
-      %Product{name: name, description: description, amount: amount, is_sold: is_sold} ->
-        if is_sold do
+      %Product{name: name, description: description, amount: amount, quantity: quantity} ->
+        if quantity == 0 do
           {:error, "Product sku #{sku} is sold out"}
         else
           attrs = %{
             sku: sku,
-            quantity: quantity,
+            quantity: shopping_cart_item_quantity,
             name: String.slice(name, 0, 127),
             description: String.slice(description, 0, 127),
             amount: amount

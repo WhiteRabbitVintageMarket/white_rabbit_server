@@ -10,16 +10,15 @@ defmodule WhiteRabbitServer.Catalog.Product do
     :amount,
     :shipping_amount,
     :image_url,
-    :is_sold,
-    :posted_at,
-    :sold_at
+    :quantity,
+    :posted_at
   ]
 
   @required_attrs [
     :sku,
     :name,
     :image_url,
-    :is_sold
+    :quantity
   ]
 
   schema "products" do
@@ -30,9 +29,8 @@ defmodule WhiteRabbitServer.Catalog.Product do
     field :sku, :string
     field :amount, Money.Ecto.Amount.Type
     field :shipping_amount, Money.Ecto.Amount.Type
-    field :is_sold, :boolean, default: false
+    field :quantity, :integer
     field :posted_at, :utc_datetime
-    field :sold_at, :utc_datetime
 
     timestamps(type: :utc_datetime)
   end
@@ -43,5 +41,6 @@ defmodule WhiteRabbitServer.Catalog.Product do
     |> cast(attrs, @attrs)
     |> validate_required(@required_attrs)
     |> unique_constraint(:sku)
+    |> validate_inclusion(:quantity, 0..10)
   end
 end

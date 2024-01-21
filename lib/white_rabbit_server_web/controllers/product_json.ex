@@ -15,16 +15,25 @@ defmodule WhiteRabbitServerWeb.ProductJSON do
     %{data: data(product)}
   end
 
-  defp data(%Product{} = product) do
+  defp data(%Product{
+         sku: sku,
+         name: name,
+         description: description,
+         size: size,
+         amount: amount,
+         shipping_amount: shipping_amount,
+         image_url: image_url,
+         quantity: quantity
+       }) do
     %{
-      sku: product.sku,
-      name: product.name,
-      description: format_optional_attr(product.description),
-      size: format_optional_attr(product.size),
-      amount: money_to_string(product.amount),
-      shipping_amount: money_to_string(product.shipping_amount),
-      image_url: product.image_url,
-      is_sold: product.is_sold
+      sku: sku,
+      name: name,
+      description: format_optional_attr(description),
+      size: format_optional_attr(size),
+      amount: money_to_string(amount),
+      shipping_amount: money_to_string(shipping_amount),
+      image_url: image_url,
+      quantity: quantity
     }
   end
 

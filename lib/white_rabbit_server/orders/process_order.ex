@@ -100,16 +100,19 @@ defmodule WhiteRabbitServer.Orders.ProcessOrder do
   defp update_product_quantities(line_items) do
     line_items
     |> Enum.map(fn %LineItem{id: id} ->
-      %LineItem{product: product} = Orders.get_line_item!(id, [:product])
-      product
+      %LineItem{product: product, quantity: quantity} = Orders.get_line_item!(id, [:product])
+      %LineItem{product: product, quantity: quantity}
     end)
-    |> Enum.each(fn %Product{sku: sku} = product ->
-      case Catalog.update_product(product, %{is_sold: true}) do
+    |> Enum.each(fn %LineItem{product: product, quantity: line_item_quantity} ->
+      %Product{sku: sku, quantity: product_quantity} = product
+      updated_product_quantity = product_quantity - line_item_quantity
+
+      case Catalog.update_product(product, %{quantity: updated_product_quantity}) do
         {:ok, %Product{}} ->
-          Logger.debug("Product #{sku} is sold")
+          Logger.debug("Product #{sku} quantity has been updated to #{updated_product_quantity}")
 
         {:error, _error} ->
-          Logger.error("Failed to update product #{sku} to be sold")
+          Logger.error("Failed to update product #{sku} quantity to #{updated_product_quantity}")
       end
     end)
   end
@@ -119,8 +122,8 @@ defmodule WhiteRabbitServer.Orders.ProcessOrder do
       %{"sku" => sku, "quantity" => _quantity} = item
 
       case Catalog.get_product_by_sku(sku) do
-        %Product{is_sold: is_sold} = product ->
-          if is_sold do
+        %Product{quantity: quantity} = product ->
+          if quantity == 0 do
             {:halt, {:error, "Product sku #{sku} is sold out"}}
           else
             {:cont, {:ok, products ++ [product]}}

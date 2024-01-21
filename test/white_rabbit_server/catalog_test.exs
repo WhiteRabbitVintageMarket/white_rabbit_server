@@ -16,7 +16,7 @@ defmodule WhiteRabbitServer.CatalogTest do
       sku: nil,
       amount: nil,
       shipping_amount: nil,
-      is_sold: nil
+      quantity: nil
     }
 
     test "list_products/0 returns all products" do
@@ -38,7 +38,7 @@ defmodule WhiteRabbitServer.CatalogTest do
         sku: "some sku",
         amount: Money.new(500, :USD),
         shipping_amount: Money.new(100, :USD),
-        is_sold: true
+        quantity: 1
       }
 
       assert {:ok, %Product{} = product} = Catalog.create_product(valid_attrs)
@@ -49,7 +49,7 @@ defmodule WhiteRabbitServer.CatalogTest do
       assert product.sku == "some sku"
       assert product.amount == Money.new(500, :USD)
       assert product.shipping_amount == Money.new(100, :USD)
-      assert product.is_sold == true
+      assert product.quantity == 1
     end
 
     test "create_product/1 with invalid data returns error changeset" do
@@ -67,7 +67,7 @@ defmodule WhiteRabbitServer.CatalogTest do
         sku: "some updated sku",
         amount: Money.new(500, :USD),
         shipping_amount: Money.new(100, :USD),
-        is_sold: false
+        quantity: 2
       }
 
       assert {:ok, %Product{} = product} = Catalog.update_product(product, update_attrs)
@@ -79,7 +79,7 @@ defmodule WhiteRabbitServer.CatalogTest do
       assert product.sku == "some updated sku"
       assert product.amount == Money.new(500, :USD)
       assert product.shipping_amount == Money.new(100, :USD)
-      assert product.is_sold == false
+      assert product.quantity == 2
     end
 
     test "update_product/2 with invalid data returns error changeset" do

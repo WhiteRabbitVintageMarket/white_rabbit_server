@@ -23,5 +23,5 @@ Repo.insert!(%Product{
   shipping_amount: Money.parse!("$8.00", :USD),
   image_url:
     "https://www.whiterabbitvintagemarket.com/images/products/brass-golden-retriever-music-box.jpeg",
-  is_sold: false
+  quantity: 1
 })

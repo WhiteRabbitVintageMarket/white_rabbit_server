@@ -9,11 +9,11 @@ defmodule WhiteRabbitServer.PaymentTest do
   alias WhiteRabbitServer.Payment
   alias WhiteRabbitServer.MockPayPalClient
 
-  describe "orders" do
+  describe "payments" do
     import WhiteRabbitServer.CatalogFixtures
 
-    test "create_order/1 with invalid list returns an error" do
-      error = %{message: "Expected shopping cart to be a list with at least 1 item", status: 400}
+    test "create_order/1 with invalid data returns an error" do
+      error = %{message: "Expected shopping_cart to be a list with at least 1 item", status: 400}
       assert {:error, ^error} = Payment.create_order("bad string data")
       assert {:error, ^error} = Payment.create_order(123)
       assert {:error, ^error} = Payment.create_order([])
@@ -22,7 +22,7 @@ defmodule WhiteRabbitServer.PaymentTest do
     test "create_order/1 with invalid shopping cart items returns an error" do
       assert {:error,
               %{
-                message: "Invalid shopping cart items",
+                message: "Invalid shopping_cart_items",
                 status: 400,
                 detail: [
                   {:sku, {"can't be blank", [validation: :required]}},
@@ -32,35 +32,35 @@ defmodule WhiteRabbitServer.PaymentTest do
 
       assert {:error,
               %{
-                message: "Invalid shopping cart items",
+                message: "Invalid shopping_cart_items",
                 status: 400,
                 detail: [{:sku, {"can't be blank", [validation: :required]}}]
               }} = Payment.create_order([%{"quantity" => 1}])
 
       assert {:error,
               %{
-                message: "Invalid shopping cart items",
+                message: "Invalid shopping_cart_items",
                 status: 400,
                 detail: [{:quantity, {"can't be blank", [validation: :required]}}]
               }} = Payment.create_order([%{"sku" => "RMJ00001"}])
 
       assert {:error,
               %{
-                message: "Invalid shopping cart items",
+                message: "Invalid shopping_cart_items",
                 status: 400,
                 detail: [sku: {"is invalid", [type: :string, validation: :cast]}]
               }} = Payment.create_order([%{"sku" => 1, "quantity" => 1}])
 
       assert {:error,
               %{
-                message: "Invalid shopping cart items",
+                message: "Invalid shopping_cart_items",
                 status: 400,
                 detail: [quantity: {"is invalid", [type: :integer, validation: :cast]}]
               }} = Payment.create_order([%{"sku" => "RMJ00001", "quantity" => "string"}])
 
       assert {:error,
               %{
-                message: "Invalid shopping cart items",
+                message: "Invalid shopping_cart_items",
                 status: 400,
                 detail: [quantity: {"is invalid", [validation: :inclusion, enum: 1..10]}]
               }} = Payment.create_order([%{"sku" => "RMJ00001", "quantity" => 0}])
@@ -73,7 +73,7 @@ defmodule WhiteRabbitServer.PaymentTest do
                Payment.create_order([%{"sku" => "UNKNOWN_SKU", "quantity" => 1}])
     end
 
-    test "create_order/1 with sold out product returns an error" do
+    test "create_order/1 with a sold out product returns an error" do
       product_fixture(%{sku: "RMJ00006", quantity: 0})
 
       assert {:error, %{message: "Product sku RMJ00006 is sold out", status: 400}} =
@@ -95,6 +95,70 @@ defmodule WhiteRabbitServer.PaymentTest do
 
       assert {:ok, %{body: %{"id" => "1DE50048G78128604", "status" => "CREATED"}, status: 200}} =
                Payment.create_order([%{"sku" => "RMJ00001", "quantity" => 1}])
+    end
+
+    test "capture_order/1 with invalid data returns an error" do
+      assert {:error, %{message: "Expected paypal_order_id to be a string"}} =
+               Payment.capture_order(123)
+
+      assert {:error, %{message: "Expected paypal_order_id to be a string"}} =
+               Payment.capture_order([])
+
+      assert {:error, %{message: "Expected paypal_order_id to not be an empty string"}} =
+               Payment.capture_order("")
+    end
+
+    test "capture_order/1 with an unknown paypal_order_id returns an error" do
+      expect(MockPayPalClient, :get_order, fn paypal_order_id, _headers ->
+        assert paypal_order_id == "123456789_unknown_order_id"
+
+        {:error,
+         %{
+           status: 404,
+           message: "The specified resource does not exist.",
+           debug_id: "ae5472ed92fad",
+           details: [
+             %{
+               "description" =>
+                 "Specified resource ID does not exist. Please check the resource ID and try again.",
+               "issue" => "INVALID_RESOURCE_ID"
+             }
+           ]
+         }}
+      end)
+
+      assert {:error, %{status: 404, message: "The specified resource does not exist."}} =
+               Payment.capture_order("123456789_unknown_order_id")
+    end
+
+    test "capture_order/1 with a sold out product returns an error" do
+      product_fixture(%{sku: "RMJ00006", quantity: 0})
+
+      expect(MockPayPalClient, :get_order, fn paypal_order_id, _headers ->
+        assert paypal_order_id == "123456_ORDER_WITH_SOLD_OUT_ITEM"
+
+        {:ok,
+         %{
+           status: 200,
+           body: %{
+             "id" => "123456_ORDER_WITH_SOLD_OUT_ITEM",
+             "status" => "COMPLETED",
+             "purchase_units" => [
+               %{
+                 "items" => [
+                   %{
+                     "quantity" => "1",
+                     "sku" => "RMJ00006"
+                   }
+                 ]
+               }
+             ]
+           }
+         }}
+      end)
+
+      assert {:error, %{message: "Product sku RMJ00006 is sold out", status: 400}} =
+               Payment.capture_order("123456_ORDER_WITH_SOLD_OUT_ITEM")
     end
   end
 end

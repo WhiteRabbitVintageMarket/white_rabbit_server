@@ -54,7 +54,7 @@ defmodule WhiteRabbitServer.Payment do
         end
 
       {:error, error} ->
-        {:error, error}
+        {:error, Map.put_new(error, :status, 400)}
     end
   end
 

@@ -12,7 +12,7 @@ defmodule WhiteRabbitServer.Payment.ShoppingCart do
         {:ok, shopping_cart_items}
 
       {:error, [_head | _tail] = errors} ->
-        {:error, %{message: "Invalid shopping cart items", detail: errors}}
+        {:error, %{message: "Invalid shopping_cart_items", detail: errors}}
 
       {:error, error_message} ->
         {:error, %{message: error_message}}
@@ -20,7 +20,7 @@ defmodule WhiteRabbitServer.Payment.ShoppingCart do
   end
 
   def create_shopping_cart_items(_shopping_cart) do
-    {:error, %{message: "Expected shopping cart to be a list with at least 1 item"}}
+    {:error, %{message: "Expected shopping_cart to be a list with at least 1 item"}}
   end
 
   def calculate_item_total(shopping_cart_items)

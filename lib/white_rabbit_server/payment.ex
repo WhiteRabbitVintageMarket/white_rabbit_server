@@ -13,13 +13,13 @@ defmodule WhiteRabbitServer.Payment do
 
   ## Examples
 
-      iex> create_order([%{"sku" => "RMJ00001", "quantity" => 1}, %{"sku" => "RMJ00007", "quantity" => 1}])
+      iex> create_order_for_payment([%{"sku" => "RMJ00001", "quantity" => 1}, %{"sku" => "RMJ00007", "quantity" => 1}])
       {:ok, %{body: %{"id" => "123456", "status" => "CREATED"}, status: 201}}
 
-      iex> create_order([%{"sku" => "RMJ00001", "quantity" => 1}, %{"sku" => "RMJ00006", "quantity" => 1}])
+      iex> create_order_for_payment([%{"sku" => "RMJ00001", "quantity" => 1}, %{"sku" => "RMJ00006", "quantity" => 1}])
       {:error, %{message: "Product sku RMJ00006 is sold out", status: 400}}
   """
-  def create_order(shopping_cart) do
+  def create_order_for_payment(shopping_cart) do
     case ShoppingCart.create_shopping_cart_items(shopping_cart) do
       {:ok, shopping_cart_items} ->
         order_body = create_order_body_payload(shopping_cart_items)
@@ -35,13 +35,13 @@ defmodule WhiteRabbitServer.Payment do
 
   ## Examples
 
-      iex> capture_order("123456")
+      iex> complete_order_for_payment("123456")
       {:ok, %{body: %{"id" => "123456", "status" => "COMPLETED"}, status: 200}}
 
-      iex> capture_order("123456")
+      iex> complete_order_for_payment("123456")
       {:error, %{message: "Product sku RMJ00006 is sold out", status: 400}}
   """
-  def capture_order(order_id) do
+  def complete_order_for_payment(order_id) do
     case ProcessOrder.validate_paypal_order(order_id) do
       {:ok, _products} ->
         case PayPalAPI.capture_order(order_id) do

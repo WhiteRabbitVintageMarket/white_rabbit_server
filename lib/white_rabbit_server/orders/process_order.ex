@@ -18,7 +18,11 @@ defmodule WhiteRabbitServer.Orders.ProcessOrder do
     update_product_quantities(line_items)
   end
 
-  def validate_paypal_order(paypal_order_id) do
+  def validate_paypal_order("") do
+    {:error, %{message: "Expected paypal_order_id to not be an empty string"}}
+  end
+
+  def validate_paypal_order(paypal_order_id) when is_binary(paypal_order_id) do
     case PayPalAPI.get_order(paypal_order_id) do
       {:ok, %{body: body}} ->
         validate_purchase_unit_items(body)
@@ -26,6 +30,10 @@ defmodule WhiteRabbitServer.Orders.ProcessOrder do
       {:error, error} ->
         {:error, error}
     end
+  end
+
+  def validate_paypal_order(_paypal_order_id) do
+    {:error, %{message: "Expected paypal_order_id to be a string"}}
   end
 
   defp create_line_items(%Order{id: order_id}, purchased_items) do
@@ -124,13 +132,13 @@ defmodule WhiteRabbitServer.Orders.ProcessOrder do
       case Catalog.get_product_by_sku(sku) do
         %Product{quantity: quantity} = product ->
           if quantity == 0 do
-            {:halt, {:error, "Product sku #{sku} is sold out"}}
+            {:halt, {:error, %{message: "Product sku #{sku} is sold out"}}}
           else
             {:cont, {:ok, products ++ [product]}}
           end
 
         nil ->
-          {:halt, {:error, "Failed to get product for sku #{sku}"}}
+          {:halt, {:error, %{message: "Failed to get product for sku #{sku}"}}}
       end
     end)
   end

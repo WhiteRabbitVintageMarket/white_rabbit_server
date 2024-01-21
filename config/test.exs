@@ -26,4 +26,4 @@ config :logger, level: :warning
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
 
-config :white_rabbit_server, paypal_client: WhiteRabbitServer.PayPal.InMemory
+config :white_rabbit_server, paypal_api_client: WhiteRabbitServer.PayPalAPI.InMemory

@@ -1,7 +1,7 @@
 defmodule WhiteRabbitServer.Orders.ProcessOrder do
   require Logger
 
-  alias WhiteRabbitServer.PayPal
+  alias WhiteRabbitServer.PayPalAPI
   alias WhiteRabbitServer.Catalog
   alias WhiteRabbitServer.Catalog.Product
   alias WhiteRabbitServer.Orders
@@ -19,7 +19,7 @@ defmodule WhiteRabbitServer.Orders.ProcessOrder do
   end
 
   def validate_paypal_order(paypal_order_id) do
-    case PayPal.get_order(paypal_order_id) do
+    case PayPalAPI.get_order(paypal_order_id) do
       {:ok, %{body: body}} ->
         validate_purchase_unit_items(body)
 

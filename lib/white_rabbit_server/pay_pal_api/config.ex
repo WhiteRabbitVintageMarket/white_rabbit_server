@@ -1,4 +1,4 @@
-defmodule WhiteRabbitServer.PayPal.Config do
+defmodule WhiteRabbitServer.PayPalAPI.Config do
   def get_base_url() do
     get_base_url(Application.fetch_env!(:white_rabbit_server, :paypal_environment_mode))
   end

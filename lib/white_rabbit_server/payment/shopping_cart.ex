@@ -1,6 +1,4 @@
 defmodule WhiteRabbitServer.Payment.ShoppingCart do
-  require Logger
-
   import Ecto.Changeset
 
   alias WhiteRabbitServer.Catalog
@@ -23,21 +21,6 @@ defmodule WhiteRabbitServer.Payment.ShoppingCart do
 
   def create_shopping_cart_items(_shopping_cart) do
     {:error, %{message: "Expected shopping cart to be a list with at least 1 item"}}
-  end
-
-  def update_shopping_cart_items_as_sold(shopping_cart_items) do
-    shopping_cart_items
-    |> Enum.map(fn %ShoppingCartItem{sku: sku} -> sku end)
-    |> Catalog.get_products_by_sku()
-    |> Enum.each(fn %Product{sku: sku} = product ->
-      case Catalog.update_product(product, %{is_sold: true}) do
-        {:ok, %Product{}} ->
-          Logger.debug("Product #{sku} is sold")
-
-        {:error, _error} ->
-          Logger.error("Failed to update product #{sku} to be sold")
-      end
-    end)
   end
 
   def calculate_item_total(shopping_cart_items)

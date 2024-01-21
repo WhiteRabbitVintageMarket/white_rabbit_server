@@ -2,6 +2,7 @@ defmodule WhiteRabbitServer.Payment do
   alias WhiteRabbitServer.PayPal
   alias WhiteRabbitServer.Payment.ShoppingCart
   alias WhiteRabbitServer.Payment.ShoppingCartItem
+  alias WhiteRabbitServer.Orders.ProcessOrder
 
   @moduledoc """
   The Payment context.
@@ -13,7 +14,7 @@ defmodule WhiteRabbitServer.Payment do
   ## Examples
 
       iex> create_order([%{"sku" => "RMJ00001", "quantity" => 1}, %{"sku" => "RMJ00007", "quantity" => 1}])
-      {:ok, %{body: %{id: "123456"}, status: 201}}
+      {:ok, %{body: %{"id" => "123456", "status" => "CREATED"}, status: 201}}
 
       iex> create_order([%{"sku" => "RMJ00001", "quantity" => 1}, %{"sku" => "RMJ00006", "quantity" => 1}])
       {:error, %{message: "Product sku RMJ00006 is sold out", status: 400}}
@@ -29,12 +30,23 @@ defmodule WhiteRabbitServer.Payment do
     end
   end
 
+  @doc """
+  Completes the payment process by capturing a PayPal order after the buyer approved the payment.
+
+  ## Examples
+
+      iex> capture_order("123456")
+      {:ok, %{body: %{"id" => "123456", "status" => "COMPLETED"}, status: 200}}
+
+      iex> capture_order("123456")
+      {:error, %{message: "Product sku RMJ00006 is sold out", status: 400}}
+  """
   def capture_order(order_id) do
-    case validate_order(order_id) do
-      {:ok, shopping_cart_items} ->
+    case ProcessOrder.validate_paypal_order(order_id) do
+      {:ok, _products} ->
         case PayPal.capture_order(order_id) do
-          {:ok, response} ->
-            ShoppingCart.update_shopping_cart_items_as_sold(shopping_cart_items)
+          {:ok, %{body: body} = response} ->
+            ProcessOrder.complete_order(body)
             {:ok, response}
 
           {:error, error} ->
@@ -106,27 +118,5 @@ defmodule WhiteRabbitServer.Payment do
         }
       }
     end)
-  end
-
-  defp get_purchase_unit_items(%{"purchase_units" => [%{"items" => items}]}) do
-    Enum.map(items, fn %{"sku" => sku, "quantity" => quantity} ->
-      %{"sku" => sku, "quantity" => quantity}
-    end)
-  end
-
-  defp validate_order(order_id) do
-    case PayPal.get_order(order_id) do
-      {:ok, %{body: body}} ->
-        shopping_cart_items =
-          body
-          |> get_purchase_unit_items()
-          # verify that none of the products are sold out
-          |> ShoppingCart.create_shopping_cart_items()
-
-        shopping_cart_items
-
-      {:error, error} ->
-        {:error, error}
-    end
   end
 end

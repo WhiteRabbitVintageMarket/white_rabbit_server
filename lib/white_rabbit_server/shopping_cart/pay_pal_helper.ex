@@ -41,6 +41,13 @@ defmodule WhiteRabbitServer.ShoppingCart.PayPalHelper do
     }
   end
 
+  def get_items_from_order(%{"purchase_units" => [%{"items" => items}]}) do
+    Enum.map(items, fn %{"sku" => sku, "quantity" => quantity} ->
+      {quantity_as_integer, _remainder} = Integer.parse(quantity)
+      %{"sku" => sku, "quantity" => quantity_as_integer}
+    end)
+  end
+
   defp calculate_item_total(items) when is_list(items) and length(items) > 0 do
     Enum.reduce(items, 0, fn %Item{product: %Product{amount: amount}, quantity: quantity}, acc ->
       total = Money.multiply(amount, quantity)

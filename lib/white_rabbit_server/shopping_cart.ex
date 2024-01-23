@@ -42,8 +42,8 @@ defmodule WhiteRabbitServer.ShoppingCart do
       {:error, %{message: "Product sku RMJ00006 is sold out", status: 400}}
   """
   def complete_checkout(order_id) do
-    case ProcessOrder.validate_paypal_order(order_id) do
-      {:ok, _products} ->
+    case ShoppingCartClient.validate_paypal_order(order_id) do
+      {:ok, _items} ->
         case PayPalAPI.capture_order(order_id) do
           {:ok, %{body: body} = response} ->
             ProcessOrder.complete_order(body)

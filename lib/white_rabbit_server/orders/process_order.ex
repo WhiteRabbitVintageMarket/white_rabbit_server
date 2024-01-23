@@ -1,7 +1,6 @@
 defmodule WhiteRabbitServer.Orders.ProcessOrder do
   require Logger
 
-  alias WhiteRabbitServer.PayPalAPI
   alias WhiteRabbitServer.Catalog
   alias WhiteRabbitServer.Catalog.Product
   alias WhiteRabbitServer.Orders
@@ -16,24 +15,6 @@ defmodule WhiteRabbitServer.Orders.ProcessOrder do
     {:ok, %Order{} = created_order} = Orders.create_order(order)
     line_items = create_line_items(created_order, items)
     update_product_quantities(line_items)
-  end
-
-  def validate_paypal_order("") do
-    {:error, %{message: "Expected paypal_order_id to not be an empty string"}}
-  end
-
-  def validate_paypal_order(paypal_order_id) when is_binary(paypal_order_id) do
-    case PayPalAPI.get_order(paypal_order_id) do
-      {:ok, %{body: body}} ->
-        validate_purchase_unit_items(body)
-
-      {:error, error} ->
-        {:error, error}
-    end
-  end
-
-  def validate_paypal_order(_paypal_order_id) do
-    {:error, %{message: "Expected paypal_order_id to be a string"}}
   end
 
   defp create_line_items(%Order{id: order_id}, purchased_items) do
@@ -121,24 +102,6 @@ defmodule WhiteRabbitServer.Orders.ProcessOrder do
 
         {:error, _error} ->
           Logger.error("Failed to update product #{sku} quantity to #{updated_product_quantity}")
-      end
-    end)
-  end
-
-  defp validate_purchase_unit_items(%{"purchase_units" => [%{"items" => items}]}) do
-    Enum.reduce_while(items, {:ok, []}, fn item, {:ok, products} ->
-      %{"sku" => sku, "quantity" => _quantity} = item
-
-      case Catalog.get_product_by_sku(sku) do
-        %Product{quantity: quantity} = product ->
-          if quantity == 0 do
-            {:halt, {:error, %{message: "Product sku #{sku} is sold out"}}}
-          else
-            {:cont, {:ok, products ++ [product]}}
-          end
-
-        nil ->
-          {:halt, {:error, %{message: "Failed to get product for sku #{sku}"}}}
       end
     end)
   end

@@ -73,7 +73,7 @@ defmodule WhiteRabbitServer.PayPalAPI.Client do
            auth: {:bearer, get_oauth_token()},
            headers: Keyword.merge(default_headers, headers)
          ) do
-      {:ok, %Req.Response{status: status, body: %{"status" => "COMPLETED"} = body}} ->
+      {:ok, %Req.Response{status: status, body: %{"id" => ^order_id, "status" => "COMPLETED"} = body}} ->
         {:ok, %{status: status, body: body}}
 
       {:ok,

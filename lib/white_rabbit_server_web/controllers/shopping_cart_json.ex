@@ -1,4 +1,4 @@
-defmodule WhiteRabbitServerWeb.PayPalOrderJSON do
+defmodule WhiteRabbitServerWeb.ShoppingCartJSON do
   def create(%{response: response}) do
     response
   end

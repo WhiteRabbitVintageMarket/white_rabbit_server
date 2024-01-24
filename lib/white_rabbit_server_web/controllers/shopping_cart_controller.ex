@@ -1,4 +1,4 @@
-defmodule WhiteRabbitServerWeb.PayPalOrderController do
+defmodule WhiteRabbitServerWeb.ShoppingCartController do
   use WhiteRabbitServerWeb, :controller
 
   alias WhiteRabbitServer.ShoppingCart

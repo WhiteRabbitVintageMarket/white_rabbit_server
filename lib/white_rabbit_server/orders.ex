@@ -39,6 +39,26 @@ defmodule WhiteRabbitServer.Orders do
   def get_order!(id), do: Repo.get!(Order, id)
 
   @doc """
+  Gets a single order.
+
+  Raises `Ecto.NoResultsError` if the Order does not exist.
+
+  ## Examples
+
+      iex> get_order_by_paypal_order_id!(1DE50048G78128604)
+      %Order{}
+
+      iex> get_order_by_paypal_order_id!(1DE50048G78128600)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_order_by_paypal_order_id(paypal_order_id, preloads \\ []) do
+    Order
+    |> Repo.get_by(paypal_order_id: paypal_order_id)
+    |> Repo.preload(preloads)
+  end
+
+  @doc """
   Creates a order.
 
   ## Examples

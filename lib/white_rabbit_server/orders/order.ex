@@ -11,6 +11,8 @@ defmodule WhiteRabbitServer.Orders.Order do
     :paypal_status,
     :payer_email,
     :payer_full_name,
+    :payer_given_name,
+    :payer_surname,
     :address_line_1,
     :admin_area_1,
     :admin_area_2,
@@ -27,6 +29,8 @@ defmodule WhiteRabbitServer.Orders.Order do
     field :paypal_status, :string
     field :payer_email, :string
     field :payer_full_name, :string
+    field :payer_given_name, :string
+    field :payer_surname, :string
     field :address_line_1, :string
     field :admin_area_1, :string
     field :admin_area_2, :string

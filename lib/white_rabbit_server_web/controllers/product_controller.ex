@@ -6,6 +6,11 @@ defmodule WhiteRabbitServerWeb.ProductController do
 
   action_fallback WhiteRabbitServerWeb.FallbackController
 
+  def index(conn, %{"sku" => skus}) when is_list(skus) do
+    products = Catalog.get_products_by_sku(skus)
+    render(conn, :index, products: products)
+  end
+
   def index(conn, _params) do
     products = Catalog.list_products()
     render(conn, :index, products: products)

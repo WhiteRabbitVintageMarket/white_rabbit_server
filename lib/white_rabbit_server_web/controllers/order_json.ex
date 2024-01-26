@@ -14,7 +14,7 @@ defmodule WhiteRabbitServerWeb.OrderJSON do
          paypal_status: paypal_status,
          gross_amount: gross_amount,
          paypal_update_time: paypal_update_time,
-         payer_full_name: payer_full_name,
+         payer_given_name: payer_given_name,
          line_items: line_items
        }) do
     %{
@@ -22,7 +22,7 @@ defmodule WhiteRabbitServerWeb.OrderJSON do
       paypal_order_id: paypal_order_id,
       paypal_update_time: paypal_update_time,
       paypal_status: paypal_status,
-      payer_full_name: payer_full_name,
+      payer_given_name: payer_given_name,
       line_items: %{data: for(line_item <- line_items, do: line_item_data(line_item))}
     }
   end

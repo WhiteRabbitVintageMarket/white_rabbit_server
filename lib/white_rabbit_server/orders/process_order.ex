@@ -39,7 +39,11 @@ defmodule WhiteRabbitServer.Orders.ProcessOrder do
       "status" => status,
       "update_time" => update_time,
       "payer" => %{
-        "email_address" => email
+        "email_address" => email,
+        "name" => %{
+          "given_name" => given_name,
+          "surname" => surname
+        }
       },
       "purchase_units" => [%{"items" => items, "payments" => payments, "shipping" => shipping}]
     } = paypal_order
@@ -76,6 +80,8 @@ defmodule WhiteRabbitServer.Orders.ProcessOrder do
       paypal_status: status,
       payer_email: email,
       payer_full_name: full_name,
+      payer_given_name: given_name,
+      payer_surname: surname,
       address_line_1: address_line_1,
       admin_area_1: admin_area_1,
       admin_area_2: admin_area_2,

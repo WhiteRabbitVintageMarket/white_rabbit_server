@@ -10,6 +10,7 @@ defmodule WhiteRabbitServer.Catalog.Product do
     :amount,
     :shipping_amount,
     :image_url,
+    :instagram_url,
     :quantity,
     :posted_at
   ]
@@ -26,6 +27,7 @@ defmodule WhiteRabbitServer.Catalog.Product do
     field :size, :string
     field :description, :string
     field :image_url, :string
+    field :instagram_url, :string
     field :sku, :string
     field :amount, Money.Ecto.Amount.Type
     field :shipping_amount, Money.Ecto.Amount.Type

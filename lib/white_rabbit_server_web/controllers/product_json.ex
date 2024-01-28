@@ -23,6 +23,7 @@ defmodule WhiteRabbitServerWeb.ProductJSON do
          amount: amount,
          shipping_amount: shipping_amount,
          image_url: image_url,
+         instagram_url: instagram_url,
          quantity: quantity
        }) do
     %{
@@ -33,6 +34,7 @@ defmodule WhiteRabbitServerWeb.ProductJSON do
       amount: money_to_string(amount),
       shipping_amount: money_to_string(shipping_amount),
       image_url: image_url,
+      instagram_url: format_optional_attr(instagram_url),
       quantity: quantity
     }
   end

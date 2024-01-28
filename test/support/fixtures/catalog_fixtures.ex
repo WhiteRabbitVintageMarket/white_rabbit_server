@@ -18,7 +18,8 @@ defmodule WhiteRabbitServer.CatalogFixtures do
         amount: Money.new(100, :USD),
         shipping_amount: Money.new(50, :USD),
         size: "some size",
-        image_url: "some url"
+        image_url: "some url",
+        instagram_url: "some url"
       })
       |> WhiteRabbitServer.Catalog.create_product()
 

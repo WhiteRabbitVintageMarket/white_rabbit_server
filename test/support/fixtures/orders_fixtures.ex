@@ -21,6 +21,8 @@ defmodule WhiteRabbitServer.OrdersFixtures do
         net_amount: Money.new(100, :USD),
         payer_email: "some payer_email",
         payer_full_name: "some payer_full_name",
+        payer_given_name: "some payer_given_name",
+        payer_surname: "some payer_surname",
         paypal_fee: Money.new(100, :USD),
         paypal_order_id: Ecto.UUID.generate(),
         paypal_status: "some paypal_status",

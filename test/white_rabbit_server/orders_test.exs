@@ -43,6 +43,8 @@ defmodule WhiteRabbitServer.OrdersTest do
         paypal_status: "some paypal_status",
         payer_email: "some payer_email",
         payer_full_name: "some payer_full_name",
+        payer_given_name: "some payer_given_name",
+        payer_surname: "some payer_surname",
         address_line_1: "some address_line_1",
         admin_area_1: "some admin_area_1",
         admin_area_2: "some admin_area_2",

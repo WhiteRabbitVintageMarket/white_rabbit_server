@@ -89,10 +89,31 @@ defmodule WhiteRabbitServer.PayPalAPI.Client do
     end
   end
 
+  @impl WhiteRabbitServer.PayPalAPI.ClientBehavior
+  def get_browser_safe_client_token() do
+    %{client_id: client_id, client_secret: client_secret} = Config.get_credentials()
+
+    case fetch_oauth_token_from_cache(client_id, client_secret,
+           response_type: "client_token",
+           intent: "sdk_init"
+         ) do
+      {:ok, access_token} ->
+        Logger.debug("PayPal access_token found in cache")
+        {:ok, %{status: 200, body: %{browser_safe_access_token: access_token}}}
+
+      {:commit, access_token, _options} ->
+        Logger.debug("Fetching PayPal access_token from api")
+        {:ok, %{status: 201, body: %{browser_safe_access_token: access_token}}}
+
+      {:ignore, %{status: status, message: message}} ->
+        {:error, %{status: status, message: message}}
+    end
+  end
+
   defp get_oauth_token() do
     %{client_id: client_id, client_secret: client_secret} = Config.get_credentials()
 
-    case fetch_oauth_token_from_cache(client_id, client_secret) do
+    case fetch_oauth_token_from_cache(client_id, client_secret, response_type: "token") do
       {:ok, access_token} ->
         Logger.debug("PayPal access_token found in cache")
         access_token
@@ -103,22 +124,44 @@ defmodule WhiteRabbitServer.PayPalAPI.Client do
     end
   end
 
-  defp get_oauth_token_from_api(client_id, client_secret) do
-    Req.post!("/v1/oauth2/token",
-      base_url: Config.get_base_url(),
-      form: [grant_type: "client_credentials"],
-      auth: {:basic, "#{client_id}:#{client_secret}"}
-    ).body
+  defp get_oauth_token_from_api(client_id, client_secret, form_body) do
+    case Req.post("/v1/oauth2/token",
+           base_url: Config.get_base_url(),
+           form: Keyword.merge([grant_type: "client_credentials"], form_body),
+           auth: {:basic, "#{client_id}:#{client_secret}"}
+         ) do
+      {:ok, %Req.Response{status: status, body: %{"access_token" => _access_token} = body}} ->
+        {:ok, %{status: status, body: body}}
+
+      {:ok,
+       %Req.Response{
+         status: status,
+         body: %{"error" => _error, "error_description" => error_description}
+       }} ->
+        {:error, %{status: status, message: error_description}}
+
+      _ ->
+        {:error, %{status: 500, message: "Unknown error"}}
+    end
   end
 
-  defp fetch_oauth_token_from_cache(client_id, client_secret) do
-    cache_key = "authentication_#{client_id}_#{client_secret}"
+  defp fetch_oauth_token_from_cache(client_id, client_secret, form_body) do
+    response_type = Keyword.fetch!(form_body, :response_type)
+    cache_key = "authentication_#{client_id}_#{client_secret}_#{response_type}"
 
     Cachex.fetch(:payment, cache_key, fn ->
-      %{"access_token" => access_token, "expires_in" => expires_in} =
-        get_oauth_token_from_api(client_id, client_secret)
-
-      {:commit, access_token, ttl: :timer.seconds(expires_in)}
+      fetch_oauth_token_from_cache_fallback(client_id, client_secret, form_body)
     end)
+  end
+
+  defp fetch_oauth_token_from_cache_fallback(client_id, client_secret, form_body) do
+    case get_oauth_token_from_api(client_id, client_secret, form_body) do
+      {:ok, %{status: _status, body: body}} ->
+        %{"access_token" => access_token, "expires_in" => expires_in} = body
+        {:commit, access_token, ttl: :timer.seconds(expires_in)}
+
+      {:error, %{status: status, message: message}} ->
+        {:ignore, %{status: status, message: message}}
+    end
   end
 end

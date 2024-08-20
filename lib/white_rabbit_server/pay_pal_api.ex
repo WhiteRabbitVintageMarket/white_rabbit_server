@@ -8,6 +8,9 @@ defmodule WhiteRabbitServer.PayPalAPI do
   def capture_order(order_id, headers \\ []),
     do: paypal_api_client_implementation().capture_order(order_id, headers)
 
+  def get_browser_safe_client_token(),
+    do: paypal_api_client_implementation().get_browser_safe_client_token()
+
   defp paypal_api_client_implementation() do
     Application.get_env(:white_rabbit_server, :paypal_api_client) ||
       raise "Missing configuration for paypal_api_client. Do you want WhiteRabbitServer.PayPalAPI.Client or WhiteRabbitServer.PayPalAPI.InMemory"

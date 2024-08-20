@@ -22,6 +22,13 @@ defmodule WhiteRabbitServer.PayPalAPI.InMemory do
     |> parse_response_from_json()
   end
 
+  @impl WhiteRabbitServer.PayPalAPI.ClientBehavior
+  def get_browser_safe_client_token() do
+    "test/fixtures/pay_pal/browser_safe_client_token.json"
+    |> File.read!()
+    |> parse_response_from_json()
+  end
+
   defp parse_response_from_json(json) do
     body = Jason.decode!(json)
     {:ok, %{status: 200, body: body}}

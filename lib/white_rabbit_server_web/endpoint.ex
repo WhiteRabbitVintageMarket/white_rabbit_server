@@ -12,7 +12,12 @@ defmodule WhiteRabbitServerWeb.Endpoint do
   ]
 
   plug Corsica,
-    origins: ["http://localhost:8080", "https://www.whiterabbitvintagemarket.com"],
+    origins: [
+      "http://localhost:8080",
+      "http://localhost:4000",
+      "https://www.whiterabbitvintagemarket.com",
+      "https://www.gregjopa.com"
+    ],
     allow_headers: ["Content-Type"]
 
   # socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]

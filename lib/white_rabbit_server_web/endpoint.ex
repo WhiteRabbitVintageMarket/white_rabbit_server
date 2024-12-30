@@ -16,7 +16,8 @@ defmodule WhiteRabbitServerWeb.Endpoint do
       "http://localhost:8080",
       "http://localhost:4000",
       "https://www.whiterabbitvintagemarket.com",
-      "https://www.gregjopa.com"
+      "https://www.gregjopa.com",
+      "https://cdpn.io"
     ],
     allow_headers: ["Content-Type"]
 
